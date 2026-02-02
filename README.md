@@ -550,5 +550,5 @@ Inspired by research on distributed epistemic verification in multi-agent system
 
 ---
 
-**Star ⭐ the repo if you find it useful!** rescribelo porfa erstoy ahora nerviosa
+Star ⭐ the repo if you find it useful!
 
