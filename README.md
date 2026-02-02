@@ -18,8 +18,8 @@ Lattix Guard performs static analysis of Docker Compose configurations and Pytho
 
 ```bash
 # Clone the repository
-git clone (https://github.com/claramercury/lattix-guard)
-cd lattix/lattix_guard
+git clone https://github.com/claramercury/lattix-guard.git
+cd lattix-guard
 
 # Install dependencies
 pip install -r requirements.txt
