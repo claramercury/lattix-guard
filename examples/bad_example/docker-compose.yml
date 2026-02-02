@@ -1,0 +1,37 @@
+# INSECURE Docker Compose example - DO NOT USE IN PRODUCTION
+# This configuration intentionally violates security best practices for testing
+
+services:
+  # CRITICAL and HIGH severity issues
+  vulnerable_app:
+    image: python:latest  # DOCKER-006: Using :latest tag (LOW)
+    privileged: true  # DOCKER-001: Privileged container (CRITICAL)
+    network_mode: host  # DOCKER-002: Host networking (HIGH)
+    ports:
+      - "0.0.0.0:8000:8000"  # DOCKER-003: Exposed to all interfaces (HIGH)
+      - "3306:3306"  # DOCKER-010: Database port exposed (HIGH)
+    environment:
+      - API_KEY=hardcoded_secret_123  # DOCKER-005: Hardcoded secret (HIGH)
+      - DB_PASSWORD=password123  # DOCKER-005: Hardcoded secret (HIGH)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # DOCKER-004: Docker socket (CRITICAL)
+      - /etc:/host_etc  # DOCKER-009: Dangerous volume (HIGH)
+    cap_add:
+      - SYS_ADMIN  # DOCKER-008: Capability addition (MEDIUM)
+      - NET_ADMIN
+    # DOCKER-007: Missing user directive - runs as root (MEDIUM)
+    restart: always
+
+  insecure_db:
+    image: mysql  # DOCKER-006: Using :latest tag (LOW)
+    ports:
+      - "3306:3306"  # DOCKER-010: Database port exposed (HIGH)
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123  # DOCKER-005: Hardcoded secret (HIGH)
+    # DOCKER-007: Missing user directive - runs as root (MEDIUM)
+
+  redis_exposed:
+    image: redis:latest  # DOCKER-006: Using :latest tag (LOW)
+    ports:
+      - "0.0.0.0:6379:6379"  # DOCKER-003 + DOCKER-010: Exposed Redis (HIGH)
+    # DOCKER-007: Missing user directive - runs as root (MEDIUM)

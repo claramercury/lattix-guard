@@ -1,0 +1,37 @@
+# Secure Docker Compose example
+# This configuration follows security best practices
+
+services:
+  app:
+    image: python:3.12-slim  # Specific version tag
+    container_name: secure_app
+    user: "1000:1000"  # Non-root user
+    ports:
+      - "127.0.0.1:8000:8000"  # Localhost binding only
+    environment:
+      - DEBUG=${DEBUG}  # Variable substitution, not hardcoded
+      - SECRET_KEY=${SECRET_KEY}  # Not hardcoded
+    env_file:
+      - .env  # Secrets in separate file
+    restart: unless-stopped
+    networks:
+      - app_network
+
+  db:
+    image: postgres:15.3  # Specific version tag
+    container_name: secure_db
+    user: "999:999"  # Non-root user
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}  # Not hardcoded
+    volumes:
+      - db_data:/var/lib/postgresql/data  # Named volume
+    networks:
+      - app_network  # Not exposed externally
+    restart: unless-stopped
+
+volumes:
+  db_data:  # Named volume for persistence
+
+networks:
+  app_network:
+    driver: bridge
